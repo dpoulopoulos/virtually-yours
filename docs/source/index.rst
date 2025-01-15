@@ -3,18 +3,25 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Virtually Yours's documentation!
-===========================================
+Welcome to Virtually Yours!
+===========================
+
+Welcome to *Virtually Yours*, your go-to repository for creating Virtual
+Machines (VMs) using `libvirt <https://libvirt.org>`_.
+
+This repository aims to provide clear, easy-to-follow instructions for creating
+Windows and Linux VMs, along with configuration files to automate the process
+as much as possible.
+
+🚧 🚧 🚧 This will always be a work in progress. 🚧 🚧 🚧
+
+Contact
+-------
+
+* Dimitris Poulopoulos dimitris.a.poulopoulos@gmail.com
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   install
