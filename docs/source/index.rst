@@ -25,3 +25,4 @@ Contact
    :caption: Contents:
 
    install
+   debian
