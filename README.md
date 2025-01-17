@@ -1,5 +1,7 @@
 # Virtually Yours - Create Virtual Machines with libvirt
 
+[![documentation](https://github.com/dpoulopoulos/virtually-yours/actions/workflows/docs.yaml/badge.svg)](https://github.com/dpoulopoulos/virtually-yours/actions/workflows/docs.yaml)
+
 Welcome to **Virtually Yours**, your go-to repository for creating Virtual Machines (VMs) using
 [**libvirt**](https://libvirt.org/).
 
