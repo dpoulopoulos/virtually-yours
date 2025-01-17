@@ -26,3 +26,9 @@ Contact
 
    install
    debian
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Administration Guides:
+
+   gpu-passthrough
