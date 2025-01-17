@@ -24,11 +24,11 @@ Contact
    :maxdepth: 1
    :caption: Contents:
 
-   install
    debian
 
 .. toctree::
    :maxdepth: 1
    :caption: Administration Guides:
 
+   install
    gpu-passthrough
