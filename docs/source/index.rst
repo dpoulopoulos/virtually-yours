@@ -31,4 +31,5 @@ Contact
    :caption: Administration Guides:
 
    install
+   rename-vm
    gpu-passthrough
