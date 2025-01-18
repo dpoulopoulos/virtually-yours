@@ -10,6 +10,7 @@ essential step for setting up a VM to function as a Machine Learning (ML) server
 * A Debian-based system.
 * Root access to the host machine.
 * A working [QEMU/KVM installation](qemu-kvm).
+* A [running VM](debian).
 * Access to the BIOS settings of the host machine.
 * A dedicated GPU that is not being used by the host (e.g., a dedicated NVIDIA GPU).
 
@@ -178,6 +179,133 @@ Verify that the GPU is bound to the VFIO driver:
         Kernel driver in use: vfio-pci
     ```
 
-## Step 2: Pass the GPU to the VM
+## Step 3: Pass the GPU to the VM
 
-🚧 🚧 🚧 This step is coming soon. 🚧 🚧 🚧
+The final step is to pass the GPU to the VM. This step involves updating the VM XML configuration
+file to include the GPU. The following instructions assume that you have already created a VM and
+you have an NVIDIA GPU.
+
+### What you'll need
+
+To complete this step, you will need:
+
+* A running VM.
+* A dedicated GPU that is not being used by the host.
+
+### Procedure
+
+Follow the steps below to pass the GPU to the VM.
+
+1. Get the BusID of the GPU:
+
+    ```console
+    root:~# lspci -nn | grep -i nvidia
+    01:00.0 VGA compatible controller [0300]: NVIDIA Corporation GA106 [GeForce RTX 3060 Lite Hash Rate] [10de:2504] (rev a1)
+    01:00.1 Audio device [0403]: NVIDIA Corporation GA106 High Definition Audio Controller [10de:228e] (rev a1)
+    ```
+
+1. Locate the PCI device address of the GPU:
+
+    ```console
+    root:~# virsh nodedev-list --tree
+    computer
+    |
+    +- net_lo_00_00_00_00_00_00
+    +- net_vnet5_fe_54_00_2c_26_3f
+    +- pci_0000_00_00_0
+    +- pci_0000_00_01_0
+    |   |
+    |   +- pci_0000_01_00_0
+    |   +- pci_0000_01_00_1
+    ...
+    ```
+
+    ```{note}
+    In this example, the PCI device address of the GPU is `pci_0000_00_01_0`. This device has two
+    functions: `pci_0000_01_00_0` and `pci_0000_01_00_1`, which correspond to the VGA controller
+    and the Audio device, respectively.
+    ```
+
+1. Check the details of the PCI device:
+
+    ```console
+    root:~# virsh nodedev-dumpxml pci_0000_01_00_0
+    <device>
+    <name>pci_0000_01_00_0</name>
+    <path>/sys/devices/pci0000:00/0000:00:01.0/0000:01:00.0</path>
+    <parent>pci_0000_00_01_0</parent>
+    <driver>
+        <name>vfio-pci</name>
+    </driver>
+    <capability type='pci'>
+        <class>0x030000</class>
+        <domain>0</domain>
+        <bus>1</bus>
+        <slot>0</slot>
+        <function>0</function>
+        <product id='0x2504'>GA106 [GeForce RTX 3060 Lite Hash Rate]</product>
+        <vendor id='0x10de'>NVIDIA Corporation</vendor>
+        <iommuGroup number='19'>
+        <address domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
+        <address domain='0x0000' bus='0x01' slot='0x00' function='0x1'/>
+        </iommuGroup>
+        <pci-express>
+        <link validity='cap' port='0' speed='16' width='16'/>
+        <link validity='sta' speed='16' width='8'/>
+        </pci-express>
+    </capability>
+    </device>
+    ```
+
+    ```{note}
+    Note that the a GeForce RTX 3060 GPU has been found and that it's address description is
+    `<address domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>` for the VGA controller and
+    `<address domain='0x0000' bus='0x01' slot='0x00' function='0x1'/>` for the Audio device.
+    ```
+
+1. Update the VM XML configuration file to include the GPU:
+
+    a. Edit the VM XML configuration file:
+
+    ```console
+    root:~# virsh edit <definition-name>
+    ```
+
+    b. Add the following lines to the XML configuration file, under the `<devices>` section:
+
+    ```xml
+    <hostdev mode='subsystem' type='pci' managed='yes'>
+      <source>
+        <address domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
+      </source>
+        <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
+    </hostdev>
+    <hostdev mode='subsystem' type='pci' managed='yes'>
+      <source>
+        <address domain='0x0000' bus='0x01' slot='0x00' function='0x1'/>
+      </source>
+        <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/>
+    </hostdev>
+    ```
+
+    ```{important}
+    Replace the `address` values with the values from the previous step.
+    ```
+
+    c. Save the changes and exit the editor.
+
+1. Reboot the VM:
+
+    ```console
+    root:~# virsh reboot <definition-name>
+    ```
+
+### Verify
+
+Verify that the GPU is passed to the VM. SSH to the VM and check if the GPU is detected:
+
+```console
+user:~$ lspci | grep -i nvidia
+00:05.0 VGA compatible controller: NVIDIA Corporation GA106 [GeForce RTX 3060 Lite Hash Rate] (rev a1)
+00:06.0 Audio device: NVIDIA Corporation GA106 High Definition Audio Controller (rev a1)
+```
