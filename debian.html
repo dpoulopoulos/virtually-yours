@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create a Debian VM &mdash; Virtually Yours 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="_static/copybutton.js?v=6dbb43f8"></script>
+        <script src="https://kit.fontawesome.com/a5cfa99c7d.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Install QEMU and libvirt on Debian" href="install.html" />
+    <link rel="prev" title="Welcome to Virtually Yours!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Virtually Yours
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Create a Debian VM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-you-ll-need">What you’ll need</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#procedure">Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#verify">Verify</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Administration Guides:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Install QEMU and libvirt on Debian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rename-vm.html">Rename a VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gpu-passthrough.html">GPU Passthrough</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Virtually Yours</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Create a Debian VM</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/debian.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="create-a-debian-vm">
+<h1>Create a Debian VM<a class="headerlink" href="#create-a-debian-vm" title="Link to this heading"></a></h1>
+<p>This guide will take you step-by-step through the process of creating a new
+Virtual Machine (VM) using libvirt and installing Debian on it. After setting
+it up, we will connect to this machine using ssh.</p>
+<section id="what-you-ll-need">
+<h2>What you’ll need<a class="headerlink" href="#what-you-ll-need" title="Link to this heading"></a></h2>
+<p>To complete this guide, you will need the following:</p>
+<ul class="simple">
+<li><p>A Debian-based system with root access.</p></li>
+<li><p>A working <a class="reference internal" href="install.html"><span class="doc std std-doc">QEMU/KVM installation</span></a>.</p></li>
+<li><p>A Debian 12.x ISO image. You can download it from the <a class="reference external" href="https://debian.org/distrib/netinst">Debian website</a>.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The guide assumes that you have already downloaded a Debian 12.x ISO image in
+the default directory <code class="docutils literal notranslate"><span class="pre">/var/lib/libvirt/images</span></code>. We will be working with a
+Debian netinst ISO image, which is a minimal installation image that downloads
+packages from the internet during the installation process.</p>
+</div>
+</section>
+<section id="procedure">
+<h2>Procedure<a class="headerlink" href="#procedure" title="Link to this heading"></a></h2>
+<p>Follow the steps below to create a new VM and install Debian on it.</p>
+<ol class="arabic">
+<li><p>Change to the project’s root directory:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~$ </span><span class="nb">cd</span><span class="w"> </span>/home/user/virtually-yours
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">/home/user/virtually-yours</span></code> with the path to the project’s root directory.</p>
+</div>
+</li>
+<li><p>Decide on login credentials for the <code class="docutils literal notranslate"><span class="pre">root</span></code> user:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~/virtually-yours$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">ROOTPW_HASH</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>passwd<span class="w"> </span>-6<span class="k">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Export your public SSH key:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~/virtually-yours$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">SSH_KEY</span><span class="o">=</span><span class="k">$(</span>cat<span class="w"> </span>~/.ssh/id_rsa.pub<span class="k">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Export the environment variables for your network settings. Replace the
+example values with values specific to your network:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GUEST_IP</span></code>: The IP address you want to assign to the VM.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GATEWAY</span></code>: The network gateway.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NETMASK</span></code>: The network mask.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NAMESERVERS</span></code>: The network DNS server.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DOMAIN</span></code>: The network domain.</p></li>
+</ul>
+ <br/>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~/virtually-yours$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">GUEST_IP</span><span class="o">=</span><span class="s2">&quot;192.168.20.100&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~/virtually-yours$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">GATEWAY</span><span class="o">=</span><span class="s2">&quot;192.168.20.1&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~/virtually-yours$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">NETMASK</span><span class="o">=</span><span class="s2">&quot;255.255.255.0&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~/virtually-yours$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">NAMESERVERS</span><span class="o">=</span><span class="s2">&quot;192.168.20.1&quot;</span>
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~/virtually-yours$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">DOMAIN</span><span class="o">=</span><span class="s2">&quot;example.com&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Render the <code class="docutils literal notranslate"><span class="pre">preseed</span></code> file:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~/virtually-yours$ </span>mkdir<span class="w"> </span>config<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>j2<span class="w"> </span>templates/preseed.cfg.j2<span class="w"> </span>&gt;<span class="w"> </span>config/preseed.cfg
+</pre></div>
+</div>
+</li>
+<li><p>Create the new VM using <code class="docutils literal notranslate"><span class="pre">virt-install</span></code>. The following command will start a
+new, completely automated, Debian installation. The VM will be on the same
+network as your host machine, using the <code class="docutils literal notranslate"><span class="pre">br0</span></code> bridge.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~/virtlml$ </span>sudo<span class="w"> </span>virt-install<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--name<span class="w"> </span>deb12<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--vcpus<span class="w"> </span><span class="m">16</span>,sockets<span class="o">=</span><span class="m">1</span>,cores<span class="o">=</span><span class="m">8</span>,threads<span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cpu<span class="w"> </span><span class="nv">mode</span><span class="o">=</span>host-passthrough<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--ram<span class="w"> </span><span class="m">16384</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--disk<span class="w"> </span><span class="nv">size</span><span class="o">=</span><span class="m">150</span>,format<span class="o">=</span>qcow2,cache<span class="o">=</span>none,discard<span class="o">=</span>unmap<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--location<span class="w"> </span>/var/lib/libvirt/images/debian-12.5.0-amd64-netinst.iso<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--os-variant<span class="w"> </span>linux2022<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--initrd-inject<span class="o">=</span>config/preseed.cfg<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--bridge<span class="o">=</span>br0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--graphics<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--extra-args<span class="w"> </span><span class="s1">&#39;auto=true console=ttyS0,115200n8&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--boot<span class="w"> </span>uefi
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want to pass through a GPU to the VM, you can add the <code class="docutils literal notranslate"><span class="pre">--hostdev</span></code> option and provide the the PCI addresses
+for your GPUs. To find the PCI addresses of your GPUs, read through the <a class="reference internal" href="gpu-passthrough.html"><span class="doc std std-doc">GPU passthrough</span></a> guide.</p>
+<p>For example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~/virtlml$ </span>sudo<span class="w"> </span>virt-install<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--name<span class="w"> </span>deb12<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--vcpus<span class="w"> </span><span class="m">16</span>,sockets<span class="o">=</span><span class="m">1</span>,cores<span class="o">=</span><span class="m">8</span>,threads<span class="o">=</span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--cpu<span class="w"> </span><span class="nv">mode</span><span class="o">=</span>host-passthrough<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--ram<span class="w"> </span><span class="m">16384</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--disk<span class="w"> </span><span class="nv">size</span><span class="o">=</span><span class="m">150</span>,format<span class="o">=</span>qcow2,cache<span class="o">=</span>none,discard<span class="o">=</span>unmap<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--location<span class="w"> </span>/var/lib/libvirt/images/debian-12.5.0-amd64-netinst.iso<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--os-variant<span class="w"> </span>linux2022<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--initrd-inject<span class="o">=</span>config/preseed.cfg<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--bridge<span class="o">=</span>br0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--graphics<span class="w"> </span>none<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--extra-args<span class="w"> </span><span class="s1">&#39;auto=true console=ttyS0,115200n8&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--boot<span class="w"> </span>uefi<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--hostdev<span class="w"> </span><span class="m">0000</span>:01:00.0<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--hostdev<span class="w"> </span><span class="m">0000</span>:01:00.1
+</pre></div>
+</div>
+</div>
+</li>
+</ol>
+</section>
+<section id="verify">
+<h2>Verify<a class="headerlink" href="#verify" title="Link to this heading"></a></h2>
+<ol class="arabic">
+<li><p>Verify that the VM is running:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~/virtlml$ </span>virsh<span class="w"> </span>list<span class="w"> </span>--all
+<span class="go">Id   Name         State</span>
+<span class="go">-----------------------------</span>
+<span class="go">1    deb12        running</span>
+</pre></div>
+</div>
+</li>
+<li><p>Verify that you can SSH into the PXE server VM:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~/virtlml$ </span>ssh<span class="w"> </span>root@deb12
+<span class="go">Linux virtually-yours-admin 6.1.0-20-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.85-1 (2024-04-11) x86_64</span>
+
+<span class="go">The programs included with the Debian GNU/Linux system are free software;</span>
+<span class="go">the exact distribution terms for each program are described in the</span>
+<span class="go">individual files in /usr/share/doc/*/copyright.</span>
+
+<span class="go">Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent</span>
+<span class="go">permitted by applicable law.</span>
+<span class="go">Last login: Thu May  2 13:04:36 2024 from 192.168.20.25</span>
+<span class="gp">root@deb12:~#</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Replace <code class="docutils literal notranslate"><span class="pre">deb12</span></code> with the IP address of the VM. Alternatively, you can set
+the hostname for the VM in your <code class="docutils literal notranslate"><span class="pre">/etc/hosts</span></code> file.</p>
+</div>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Virtually Yours!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="install.html" class="btn btn-neutral float-right" title="Install QEMU and libvirt on Debian" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Dimitris Poulopoulos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

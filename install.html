@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Install QEMU and libvirt on Debian &mdash; Virtually Yours 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="_static/copybutton.js?v=6dbb43f8"></script>
+        <script src="https://kit.fontawesome.com/a5cfa99c7d.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Rename a VM" href="rename-vm.html" />
+    <link rel="prev" title="Create a Debian VM" href="debian.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Virtually Yours
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="debian.html">Create a Debian VM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Administration Guides:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Install QEMU and libvirt on Debian</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-you-ll-need">What you’ll need</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#procedure">Procedure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#verify">Verify</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rename-vm.html">Rename a VM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gpu-passthrough.html">GPU Passthrough</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Virtually Yours</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Install QEMU and libvirt on Debian</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/install.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="install-qemu-and-libvirt-on-debian">
+<h1>Install QEMU and libvirt on Debian<a class="headerlink" href="#install-qemu-and-libvirt-on-debian" title="Link to this heading"></a></h1>
+<p>This guide offers detailed steps for installing and configuring KVM, along with QEMU and the libvirt
+software suite, on a Debian-based system. Since KVM kernel modules are already integrated into the
+Linux kernel, the installation process primarily involves setting up QEMU and libvirt.</p>
+<p><a class="reference external" href="https://linux-kvm.org/page/Main_Page">KVM (Kernel-based Virtual Machine)</a> is a virtualization
+module in the Linux kernel that enables the kernel to act as a Type-1 hypervisor. This functionality
+allows you to run guest operating systems at speeds nearly equivalent to the host machine.</p>
+<p><a class="reference external" href="https://qemu.org/">QEMU</a> is a generic and open source machine emulator and virtualizer. QEMU can
+emulate an entire system, including the CPU, memory, and other hardware components, but paired with
+KVM it can achieve near-native performance.</p>
+<p><a class="reference external" href="https://libvirt.org/">libvirt</a> is a toolkit that provides a common API for managing virtualized
+environments.</p>
+<section id="what-you-ll-need">
+<h2>What you’ll need<a class="headerlink" href="#what-you-ll-need" title="Link to this heading"></a></h2>
+<p>Το complete this guide, you will need the following:</p>
+<ul class="simple">
+<li><p>A Debian-based system with root access.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This project is tested on Debian 12 (Bookworm). It should work on other Debian-based distributions
+but it will require some modifications. We also plan to support Rocky Linux in the future.</p>
+</div>
+</section>
+<section id="procedure">
+<h2>Procedure<a class="headerlink" href="#procedure" title="Link to this heading"></a></h2>
+<p>Follow the steps below to install QEMU and the libvirt software suite on your Debian-based system.
+The steps check if your CPU supports virtualization technology, install the required packages, and
+enable the <code class="docutils literal notranslate"><span class="pre">libvirtd</span></code> virtualization daemon.</p>
+<ol class="arabic">
+<li><p>Change to root user:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~$ </span>sudo<span class="w"> </span>su<span class="w"> </span>-
+<span class="gp">root:~#</span>
+</pre></div>
+</div>
+</li>
+<li><p>Check if your CPU supports virtualization technology. If virtualization is supported, the output
+should be greater than <code class="docutils literal notranslate"><span class="pre">0</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">root:~# </span>egrep<span class="w"> </span>-c<span class="w"> </span><span class="s1">&#39;(vmx|svm)&#39;</span><span class="w"> </span>/proc/cpuinfo
+<span class="go">56</span>
+</pre></div>
+</div>
+</li>
+<li><p>Check if KVM virtualization is supported:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">root:~# </span>kvm-ok
+<span class="go">INFO: /dev/kvm exists</span>
+<span class="go">KVM acceleration can be used</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">kvm-ok</span></code> utility is missing, install the <code class="docutils literal notranslate"><span class="pre">cpu-checker</span></code> package:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">root:~# </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>cpu-checker
+</pre></div>
+</div>
+</div>
+</li>
+<li><p>Install QEMU and the libvirt software suite:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">root:~# </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>qemu-system-x86<span class="w"> </span>libvirt-daemon-system<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>virtinst<span class="w"> </span>virt-viewer<span class="w"> </span>ovmf<span class="w"> </span>swtpm<span class="w"> </span>qemu-utils<span class="w"> </span>guestfs-tools<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>libosinfo-bin<span class="w"> </span>tuned
+</pre></div>
+</div>
+<p>This command installs the following packages:</p>
+<ul class="simple">
+<li><p><strong>qemu-system-x86</strong>: An open-source emulator for hardware resources of a computer.</p></li>
+<li><p><strong>libvirt-daemon-system</strong>: A daemon that manages virtual machines and the hypervisor,
+as well library calls.</p></li>
+<li><p><strong>virtinst</strong>: A command-line tool for creating guest virtual machines.</p></li>
+<li><p><strong>virt-viewer</strong>: A graphical console for connecting to a running virtual machine.</p></li>
+<li><p><strong>ovmf</strong>: A set of firmware files for UEFI support in QEMU.</p></li>
+<li><p><strong>swtpm</strong>: A TPM emulator for Virtual Machines.</p></li>
+<li><p><strong>qemu-utils</strong>: A tool to create, convert, modify, and snapshot offline disk images.</p></li>
+<li><p><strong>guestfs-tools</strong>: A set of extended command-line tools for managing virtual machines.</p></li>
+<li><p><strong>libosinfo-bin</strong>: A library for managing OS information for virtualization.</p></li>
+<li><p><strong>tuned</strong>: A system tuning service that optimizes system performance.</p></li>
+</ul>
+ <br/>
+</li>
+<li><p>Enable and start the <code class="docutils literal notranslate"><span class="pre">libvirtd</span></code> virtualization daemon:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">root:~# </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>libvirtd
+</pre></div>
+</div>
+</li>
+<li><p>Enable the <code class="docutils literal notranslate"><span class="pre">tuned</span></code> service:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">root:~# </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>tuned
+</pre></div>
+</div>
+</li>
+<li><p>Find the default profile for the <code class="docutils literal notranslate"><span class="pre">tuned</span></code> service:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">root:~# </span>tuned-adm<span class="w"> </span>list
+<span class="go">...</span>
+<span class="go">Current active profile: balanced</span>
+</pre></div>
+</div>
+</li>
+<li><p>Optimize the system for virtualization:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">root:~# </span>tuned-adm<span class="w"> </span>profile<span class="w"> </span>virtual-host
+</pre></div>
+</div>
+</li>
+<li><p>Change back to your user account:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">root:~# </span><span class="nb">exit</span>
+<span class="gp">user:~$</span>
+</pre></div>
+</div>
+</li>
+<li><p>Add your user account to the <code class="docutils literal notranslate"><span class="pre">kvm</span></code> and <code class="docutils literal notranslate"><span class="pre">libvirt</span></code> groups:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~$ </span>sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>kvm,libvirt<span class="w"> </span><span class="nv">$USER</span>
+</pre></div>
+</div>
+</li>
+<li><p>Set the default libvirt URI to <code class="docutils literal notranslate"><span class="pre">qemu:///system</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~$ </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;export LIBVIRT_DEFAULT_URI=&#39;qemu:///system&#39;&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+</pre></div>
+</div>
+</li>
+<li><p>Source your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> files to enable your changes:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~$ </span>.<span class="w"> </span>~/.bashrc
+</pre></div>
+</div>
+</li>
+<li><p>Set the ACL for the default images directory:</p>
+<p>a. Remove the existing ACLs:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~$ </span>sudo<span class="w"> </span>setfacl<span class="w"> </span>-R<span class="w"> </span>-b<span class="w"> </span>/var/lib/libvirt/images
+</pre></div>
+</div>
+<p>b. Grant regular user permission to the directory recursively:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~$ </span>sudo<span class="w"> </span>setfacl<span class="w"> </span>-m<span class="w"> </span>u:<span class="nv">$USER</span>:rwx<span class="w"> </span>/var/lib/libvirt/images
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="verify">
+<h2>Verify<a class="headerlink" href="#verify" title="Link to this heading"></a></h2>
+<p>Follow the steps below to verify that QEMU/KVM is correctly installed on your system, and launch the
+Virtual Machine Manager desktop application:</p>
+<ol class="arabic">
+<li><p>Verify that the <code class="docutils literal notranslate"><span class="pre">libvirtd</span></code> service is running:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~$ </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>libvirtd
+<span class="go">● libvirtd.service - Virtualization daemon</span>
+<span class="go"> Loaded: loaded (/lib/systemd/system/libvirtd.service; enabled; preset: enabled)</span>
+<span class="go"> Active: active (running) since Thu 2024-02-08 08:07:20 EET; 7h ago</span>
+<span class="go">...skipping...</span>
+</pre></div>
+</div>
+</li>
+<li><p>Check that QEMU is correctly installed by querying its version:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~$ </span>qemu-system-x86_64<span class="w"> </span>--version
+<span class="go">QEMU emulator version 7.2.9 (Debian 1:7.2+dfsg-7+deb12u5)</span>
+<span class="go">Copyright (c) 2003-2022 Fabrice Bellard and the QEMU Project developers</span>
+</pre></div>
+</div>
+</li>
+<li><p>Validate the host virtualization setup:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~$ </span>sudo<span class="w"> </span>virt-host-validate<span class="w"> </span>qemu
+<span class="go">QEMU: Checking for hardware virtualization                                 : PASS</span>
+<span class="go">QEMU: Checking if device /dev/kvm exists                                   : PASS</span>
+<span class="go">QEMU: Checking if device /dev/kvm is accessible                            : PASS</span>
+<span class="go">QEMU: Checking if device /dev/vhost-net exists                             : PASS</span>
+<span class="go">QEMU: Checking if device /dev/net/tun exists                               : PASS</span>
+<span class="go">QEMU: Checking for cgroup &#39;cpu&#39; controller support                         : PASS</span>
+<span class="go">QEMU: Checking for cgroup &#39;cpuacct&#39; controller support                     : PASS</span>
+<span class="go">QEMU: Checking for cgroup &#39;cpuset&#39; controller support                      : PASS</span>
+<span class="go">QEMU: Checking for cgroup &#39;memory&#39; controller support                      : PASS</span>
+<span class="go">QEMU: Checking for cgroup &#39;devices&#39; controller support                     : PASS</span>
+<span class="go">QEMU: Checking for cgroup &#39;blkio&#39; controller support                       : PASS</span>
+<span class="go">QEMU: Checking for device assignment IOMMU support                         : PASS</span>
+<span class="go">QEMU: Checking if IOMMU is enabled by kernel                               : PASS</span>
+<span class="go">QEMU: Checking for secure guest support                                    : WARN (Unknown if this platform has Secure Guest support)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have an Intel CPU, you may see a warning about secure guest support. This is expected as
+it checks only for <a class="reference external" href="https://stackoverflow.com/questions/65207563/qemu-warn-unknown-if-this-platform-has-secure-guest-support">AMD and IBM processors</a>.</p>
+</div>
+</li>
+<li><p>Check the libvirt instance you are connected to:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~$ </span>virsh<span class="w"> </span>uri
+<span class="go">qemu:///system</span>
+</pre></div>
+</div>
+</li>
+<li><p>Review the ACL permissions for the default images directory:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">user:~$ </span>getfacl<span class="w"> </span>/var/lib/libvirt/images
+<span class="go">getfacl: Removing leading &#39;/&#39; from absolute path names</span>
+<span class="gp"># </span>file:<span class="w"> </span>var/lib/libvirt/images/
+<span class="gp"># </span>owner:<span class="w"> </span>root
+<span class="gp"># </span>group:<span class="w"> </span>root
+<span class="go">user::rwx</span>
+<span class="go">user:&lt;your-username&gt;:rwx</span>
+<span class="go">group::--x</span>
+<span class="go">mask::rwx</span>
+<span class="go">other::--x</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="debian.html" class="btn btn-neutral float-left" title="Create a Debian VM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="rename-vm.html" class="btn btn-neutral float-right" title="Rename a VM" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Dimitris Poulopoulos.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
