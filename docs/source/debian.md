@@ -102,6 +102,30 @@ Follow the steps below to create a new VM and install Debian on it.
         --boot uefi
     ```
 
+    ```{note}
+    If you want to pass through a GPU to the VM, you can add the `--hostdev` option and provide the the PCI addresses
+    for your GPUs. To find the PCI addresses of your GPUs, read through the [GPU passthrough](gpu-passthrough) guide.
+    
+    For example:
+
+    ```console
+    user:~/virtlml$ sudo virt-install \
+        --name deb12 \
+        --vcpus 16,sockets=1,cores=8,threads=2 \
+        --cpu mode=host-passthrough \
+        --ram 16384 \
+        --disk size=150,format=qcow2,cache=none,discard=unmap \
+        --location /var/lib/libvirt/images/debian-12.5.0-amd64-netinst.iso \
+        --os-variant linux2022 \
+        --initrd-inject=config/preseed.cfg \
+        --bridge=br0 \
+        --graphics none \
+        --extra-args 'auto=true console=ttyS0,115200n8' \
+        --boot uefi \
+        --hostdev 0000:01:00.0 \
+        --hostdev 0000:01:00.1
+    ```
+
 ## Verify
 
 1. Verify that the VM is running:
